@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { LeadStatus, LeadsQuery } from '@/lib/types';
 import { useLeads, useCreateLead } from '@/lib/hooks/use-leads';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 import { Spinner } from '@/components/spinner';
 import { ErrorMessage } from '@/components/error-message';
 import { Pagination } from '@/components/pagination';
@@ -17,8 +18,9 @@ const LIMIT = 10;
 
 export default function LeadsPage() {
   const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const [query, setQuery] = useState<LeadsQuery>({
-    q: '',
     status: '',
     sort: 'createdAt',
     order: 'desc',
@@ -26,7 +28,8 @@ export default function LeadsPage() {
     limit: LIMIT,
   });
 
-  const { data, isLoading, isError, error } = useLeads(query);
+  const debouncedQuery = { ...query, q: debouncedSearch };
+  const { data, isLoading, isError, error } = useLeads(debouncedQuery);
   const createLead = useCreateLead(() => setShowForm(false));
 
   const leads = data?.data ?? [];
@@ -47,9 +50,9 @@ export default function LeadsPage() {
         )}
 
         <LeadsFilters
-          search={query.q ?? ''}
+          search={search}
           status={query.status as LeadStatus | ''}
-          onSearchChange={(q) => setQuery((prev) => ({ ...prev, q, page: 1 }))}
+          onSearchChange={(q) => { setSearch(q); setQuery((prev) => ({ ...prev, page: 1 })); }}
           onStatusChange={(status) => setQuery((prev) => ({ ...prev, status, page: 1 }))}
         />
 
@@ -61,8 +64,8 @@ export default function LeadsPage() {
           </div>
         ) : leads.length === 0 ? (
           <LeadsEmpty
-            hasFilters={!!(query.q || query.status)}
-            onClearFilters={() => setQuery((p) => ({ ...p, q: '', status: '', page: 1 }))}
+            hasFilters={!!(search || query.status)}
+            onClearFilters={() => { setSearch(''); setQuery((p) => ({ ...p, status: '', page: 1 })); }}
           />
         ) : (
           <>

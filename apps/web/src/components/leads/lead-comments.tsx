@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Comment } from '@/lib/types';
+import { formatDateTime } from '@/lib/format';
 import { Spinner } from '@/components/spinner';
 import { ErrorMessage } from '@/components/error-message';
 
@@ -70,7 +71,7 @@ export function LeadComments({ comments, loading, onAdd }: LeadCommentsProps) {
           {comments.map((c) => (
             <li key={c.id} className="rounded-lg bg-gray-50 px-4 py-3">
               <p className="whitespace-pre-wrap text-sm text-gray-800">{c.text}</p>
-              <p className="mt-1 text-xs text-gray-400">{new Date(c.createdAt).toLocaleString()}</p>
+              <p className="mt-1 text-xs text-gray-400">{formatDateTime(c.createdAt)}</p>
             </li>
           ))}
         </ul>

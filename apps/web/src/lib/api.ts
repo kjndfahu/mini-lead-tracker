@@ -12,10 +12,9 @@ import type {
 export const api = {
   leads: {
     list: (query: LeadsQuery = {}) => {
-      const params: Record<string, string> = {};
-      Object.entries(query).forEach(([k, v]) => {
-        if (v !== undefined && v !== '') params[k] = String(v);
-      });
+      const params = Object.fromEntries(
+        Object.entries(query).filter(([, v]) => v !== undefined && v !== ''),
+      );
       return axiosInstance.get<LeadsResponse>('/leads', { params }).then((r) => r.data);
     },
     get: (id: string) =>

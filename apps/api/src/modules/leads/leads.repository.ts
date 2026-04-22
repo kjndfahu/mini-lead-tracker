@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { QueryLeadDto } from './dto/query-lead.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class LeadsService {
+export class LeadsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(query: QueryLeadDto) {
@@ -48,23 +48,19 @@ export class LeadsService {
     return { data, total, page, limit };
   }
 
-  async findOne(id: string) {
-    const lead = await this.prisma.lead.findUnique({ where: { id } });
-    if (!lead) throw new NotFoundException(`Lead ${id} not found`);
-    return lead;
+  findById(id: string) {
+    return this.prisma.lead.findUnique({ where: { id } });
   }
 
-  async create(dto: CreateLeadDto) {
-    return await this.prisma.lead.create({ data: dto });
+  create(dto: CreateLeadDto) {
+    return this.prisma.lead.create({ data: dto });
   }
 
-  async update(id: string, dto: UpdateLeadDto) {
-    await this.findOne(id);
+  update(id: string, dto: UpdateLeadDto) {
     return this.prisma.lead.update({ where: { id }, data: dto });
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    await this.prisma.lead.delete({ where: { id } });
+  delete(id: string) {
+    return this.prisma.lead.delete({ where: { id } });
   }
 }

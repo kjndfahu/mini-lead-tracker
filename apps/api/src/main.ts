@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -15,7 +16,10 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3001);
-  console.log(`API running on port ${process.env.PORT ?? 3001}`);
+  const config = app.get(ConfigService);
+  const port = config.get<number>('port') ?? 3001;
+
+  await app.listen(port);
+  console.log(`API running on port ${port}`);
 }
 bootstrap();

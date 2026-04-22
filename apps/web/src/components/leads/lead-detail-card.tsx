@@ -1,4 +1,5 @@
 import type { Lead, UpdateLeadData } from '@/lib/types';
+import { formatDate, formatCurrency } from '@/lib/format';
 import { StatusBadge } from '@/components/status-badge';
 import { Spinner } from '@/components/spinner';
 import { LeadForm } from '@/components/lead-form';
@@ -56,21 +57,15 @@ export function LeadDetailCard({
           </div>
           <div>
             <dt className="text-gray-500">Value</dt>
-            <dd className="font-medium text-gray-900">
-              {lead.value != null ? Number(lead.value).toLocaleString() : '—'}
-            </dd>
+            <dd className="font-medium text-gray-900">{formatCurrency(lead.value)}</dd>
           </div>
           <div>
             <dt className="text-gray-500">Created</dt>
-            <dd className="font-medium text-gray-900">
-              {new Date(lead.createdAt).toLocaleDateString()}
-            </dd>
+            <dd className="font-medium text-gray-900">{formatDate(lead.createdAt)}</dd>
           </div>
           <div>
             <dt className="text-gray-500">Updated</dt>
-            <dd className="font-medium text-gray-900">
-              {new Date(lead.updatedAt).toLocaleDateString()}
-            </dd>
+            <dd className="font-medium text-gray-900">{formatDate(lead.updatedAt)}</dd>
           </div>
           {lead.notes && (
             <div className="col-span-2 sm:col-span-3">

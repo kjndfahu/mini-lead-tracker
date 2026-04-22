@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Lead } from '@/lib/types';
+import { formatDate, formatCurrency } from '@/lib/format';
 import { StatusBadge } from '@/components/status-badge';
 
 interface LeadsTableProps {
@@ -34,10 +35,10 @@ export function LeadsTable({ leads }: LeadsTableProps) {
                 <StatusBadge status={lead.status} />
               </td>
               <td className="hidden px-4 py-3 text-right text-gray-600 sm:table-cell">
-                {lead.value != null ? Number(lead.value).toLocaleString() : '—'}
+                {formatCurrency(lead.value)}
               </td>
               <td className="hidden px-4 py-3 text-gray-500 lg:table-cell">
-                {new Date(lead.createdAt).toLocaleDateString()}
+                {formatDate(lead.createdAt)}
               </td>
             </tr>
           ))}
