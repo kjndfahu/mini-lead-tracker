@@ -75,6 +75,16 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 ---
 
+## Swagger UI
+
+Після запуску API документація доступна за адресою:
+
+```
+http://localhost:3001/api/docs
+```
+
+---
+
 ## API — приклади запитів
 
 ### Отримати список лідів
